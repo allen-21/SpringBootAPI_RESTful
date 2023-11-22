@@ -1,15 +1,17 @@
 package com.AnibalValter.todoSimple.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service; // Adicionado para indicar que esta classe é um serviço
+import org.springframework.transaction.annotation.Transactional;
 
 import com.AnibalValter.todoSimple.models.Task;
 import com.AnibalValter.todoSimple.models.User;
 import com.AnibalValter.todoSimple.repositories.TaskRepository;
 
-import jakarta.transaction.Transactional;
-
+@Service // Adicionado para indicar que esta classe é um serviço
 public class TaskService {
     
     @Autowired
@@ -19,14 +21,15 @@ public class TaskService {
     private UserService userService;
 
     public Task findById(Long id){
-
         Optional<Task> task = this.taskRepository.findById(id);
-
-        return task.orElseThrow (() -> new RuntimeException(
-
-        "Tarefa nao encontardo! Id" + id + "Tipo" + Task.class.getName()
+        return task.orElseThrow(() -> new RuntimeException(
+            "Tarefa não encontrada! Id " + id + " Tipo " + Task.class.getName()
         ));
+    }
 
+    public List<Task> findAllByUserId(Long userId){
+        List<Task> tasks = this.taskRepository.findByUser_Id(userId);
+        return tasks;
     }
 
     @Transactional
@@ -42,18 +45,15 @@ public class TaskService {
     public Task update(Task obj){
         Task newobj = findById(obj.getId());
         newobj.setDescription(obj.getDescription());
-
         return this.taskRepository.save(newobj);
     }
 
     public void delete(Long id){
         findById(id);
-
         try {
             this.taskRepository.deleteById(id);
         } catch (Exception e) {
-            throw new RuntimeException("Nao é possivel excluir pois ha entidades relacionados!");
+            throw new RuntimeException("Não é possível excluir pois há entidades relacionadas!");
         }
     }
-
 }
