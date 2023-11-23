@@ -5,12 +5,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Todo Simple app</title>
+    <script src="script.js"></script>
     <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
 <body>
-    <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
    
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border" role="status" id="loading">
+            
+        </div>
+
+    </div>
+    <p class="h1 text-center">Tarefa de um usuario</p>
+   
+    <table class="table table-hover">
+        <tbody id="tasks">
+           
+        </tbody>
+    </table>
+
+
 </body>
 
 </html>

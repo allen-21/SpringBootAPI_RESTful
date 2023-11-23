@@ -16,7 +16,7 @@ import com.AnibalValter.todoSimple.services.UserService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/tasks") // Mudado de "/task" para "/tasks" para ser mais consistente
+@RequestMapping("/task") // Mudado de "/task" para "/tasks" para ser mais consistente
 @Validated
 public class TaskController {
     
