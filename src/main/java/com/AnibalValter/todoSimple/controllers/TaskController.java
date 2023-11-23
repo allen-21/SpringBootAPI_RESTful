@@ -2,7 +2,7 @@ package com.AnibalValter.todoSimple.controllers;
 
 import java.net.URI;
 import java.util.List;
-
+ 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -11,6 +11,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.AnibalValter.todoSimple.models.Task;
 import com.AnibalValter.todoSimple.services.TaskService;
+import com.AnibalValter.todoSimple.services.UserService;
 
 import jakarta.validation.Valid;
 
@@ -21,7 +22,9 @@ public class TaskController {
     
     @Autowired
     private TaskService taskService;
-
+ @Autowired
+    private UserService userService;
+    
     @GetMapping("/{id}")
     public ResponseEntity<Task> findById(@PathVariable Long id) {
         Task obj = this.taskService.findById(id);
@@ -30,6 +33,7 @@ public class TaskController {
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Task>> findAllByUserId(@PathVariable Long userId) {
+        this.userService.findById(userId);
         List<Task> obj = this.taskService.findAllByUserId(userId);
         return ResponseEntity.ok().body(obj);
     }
