@@ -2,8 +2,10 @@ package com.AnibalValter.todoSimple.controllers;
 
 import java.net.URI;
 import java.util.List;
- 
-import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.validation.Valid;
+
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -13,17 +15,21 @@ import com.AnibalValter.todoSimple.models.Task;
 import com.AnibalValter.todoSimple.services.TaskService;
 import com.AnibalValter.todoSimple.services.UserService;
 
-import jakarta.validation.Valid;
+
 
 @RestController
-@RequestMapping("/task") // Mudado de "/task" para "/tasks" para ser mais consistente
+@RequestMapping("/tasks") 
 @Validated
 public class TaskController {
     
-    @Autowired
-    private TaskService taskService;
- @Autowired
-    private UserService userService;
+    private final TaskService taskService;
+    private final UserService userService;
+
+  
+    public TaskController(TaskService taskService, UserService userService) {
+        this.taskService = taskService;
+        this.userService = userService;
+    }
     
     @GetMapping("/{id}")
     public ResponseEntity<Task> findById(@PathVariable Long id) {

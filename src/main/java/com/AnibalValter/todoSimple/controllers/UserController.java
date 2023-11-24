@@ -2,6 +2,8 @@ package com.AnibalValter.todoSimple.controllers;
 
 import java.net.URI;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -21,8 +23,6 @@ import com.AnibalValter.todoSimple.models.User.CreateUser;
 import com.AnibalValter.todoSimple.models.User.UpdateUser;
 import com.AnibalValter.todoSimple.services.UserService;
 
-import jakarta.validation.Valid;
-
 @RestController
 @RequestMapping("/user")
 @Validated
@@ -40,17 +40,17 @@ public class UserController {
 
     @PostMapping
     @Validated(CreateUser.class)
-    public ResponseEntity<Void> create(@Valid @RequestBody User obj){
+    public ResponseEntity<Void> create(@Valid @RequestBody User obj) {
 
         this.userService.create(obj);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-        .path("/{id}").buildAndExpand(obj.getId()).toUri();
+                .path("/{id}").buildAndExpand(obj.getId()).toUri();
         return ResponseEntity.created(uri).build();
     }
 
     @PutMapping("/{id}")
     @Validated(UpdateUser.class)
-    public ResponseEntity<Void> update(@Valid @RequestBody User obj, @PathVariable Long id){
+    public ResponseEntity<Void> update(@Valid @RequestBody User obj, @PathVariable Long id) {
 
         obj.setId(id);
         obj = this.userService.update(obj);
@@ -58,7 +58,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Valid> delete(@PathVariable Long id){
+    public ResponseEntity<Valid> delete(@PathVariable Long id) {
         this.userService.delete(id);
         return ResponseEntity.noContent().build();
     }

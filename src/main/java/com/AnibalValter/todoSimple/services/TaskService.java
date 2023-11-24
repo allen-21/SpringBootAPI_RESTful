@@ -3,6 +3,8 @@ package com.AnibalValter.todoSimple.services;
 import java.util.List;
 import java.util.Optional;
 
+import javax.xml.bind.DataBindingException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service; // Adicionado para indicar que esta classe é um serviço
 import org.springframework.transaction.annotation.Transactional;
@@ -10,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.AnibalValter.todoSimple.models.Task;
 import com.AnibalValter.todoSimple.models.User;
 import com.AnibalValter.todoSimple.repositories.TaskRepository;
+import com.AnibalValter.todoSimple.services.exceptions.DataBindingViolationException;
+import com.AnibalValter.todoSimple.services.exceptions.ObjectNotFoundException;
 
 @Service // Adicionado para indicar que esta classe é um serviço
 public class TaskService {
@@ -22,7 +26,7 @@ public class TaskService {
 
     public Task findById(Long id){
         Optional<Task> task = this.taskRepository.findById(id);
-        return task.orElseThrow(() -> new RuntimeException(
+        return task.orElseThrow(() -> new ObjectNotFoundException(
             "Tarefa não encontrada! Id " + id + " Tipo " + Task.class.getName()
         ));
     }
@@ -53,7 +57,7 @@ public class TaskService {
         try {
             this.taskRepository.deleteById(id);
         } catch (Exception e) {
-            throw new RuntimeException("Não é possível excluir pois há entidades relacionadas!");
+            throw new DataBindingViolationException("Não é possível excluir pois há entidades relacionadas!");
         }
     }
 }
