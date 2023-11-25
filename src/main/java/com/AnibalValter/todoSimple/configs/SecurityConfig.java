@@ -2,33 +2,44 @@ package com.AnibalValter.todoSimple.configs;
 
 import java.util.Arrays;
 
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.AnibalValter.todoSimple.security.JWTUtil;
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
+
+    private AuthenticationManager authenticationManager;
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    @Autowired
+    private JWTUtil jwtUtil;
 
     // Padrões de URLs públicas acessíveis sem autenticação
     private static final String[] PUBLIC_MATCHERS = {
             "/"
     };
 
-    // Padrões de URLs públicas acessíveis sem autenticação, permitindo apenas requisições POST
+    // Padrões de URLs públicas acessíveis sem autenticação, permitindo apenas
+    // requisições POST
     private static final String[] PUBLIC_MATCHERS_POST = {
             "/user",
             "/login"
@@ -40,6 +51,13 @@ public class SecurityConfig {
 
         // Desabilita a proteção CSRF e habilita a configuração de CORS
         http.cors().and().csrf().disable();
+
+        AuthenticationManagerBuilder authenticationManagerBuilder = http
+        .getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.userDetailsService(this.userDetailsService)
+        .passwordEncoder(bCryptPasswordEncoder());
+
+        this.authenticationManager = authenticationManagerBuilder.build();
 
         // Configuração de autorização das requisições
         http.authorizeRequests()
@@ -66,8 +84,7 @@ public class SecurityConfig {
 
     // Bean para fornecer um codificador de senha BCrypt
     @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder(){
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }
-
