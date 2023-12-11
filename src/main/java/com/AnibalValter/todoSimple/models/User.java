@@ -2,10 +2,9 @@ package com.AnibalValter.todoSimple.models;
 
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -23,9 +22,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import com.AnibalValter.todoSimple.models.enums.ProfileEnum;
@@ -36,14 +33,8 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 @Table(name = User.TABLE_NAME)
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode
+@Data
 public class User {
-
-    // Interfaces para validação de grupos durante a criação e atualização do usuário
-    public interface CreateUser {}
-    public interface UpdateUser {}
 
     // Nome da tabela no banco de dados
     public static final String TABLE_NAME = "user";
@@ -54,19 +45,15 @@ public class User {
     @Column(name = "id", unique = true)
     private Long id;
 
-    // Nome de usuário, com restrições de tamanho e unicidade
     @Column(name = "username", length = 100, nullable = false, unique = true)
-    @NotNull(groups = CreateUser.class)
-    @NotEmpty(groups = CreateUser.class)
-    @Size(groups = CreateUser.class, min = 2, max = 100)
+    @NotBlank
+    @Size(min = 2, max = 100)
     private String username;
 
-    // Senha do usuário, com restrições de tamanho e não nulo
     @JsonProperty(access = Access.WRITE_ONLY)
     @Column(name = "password", length = 60, nullable = false)
-    @NotNull(groups = { CreateUser.class, UpdateUser.class })
-    @NotEmpty(groups = { CreateUser.class, UpdateUser.class })
-    @Size(groups = { CreateUser.class, UpdateUser.class }, min = 8, max = 60)
+    @NotBlank
+    @Size(min = 8, max = 60)
     private String password;
 
     // Relacionamento com as tarefas do usuário

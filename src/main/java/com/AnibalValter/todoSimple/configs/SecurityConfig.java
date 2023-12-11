@@ -19,6 +19,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.AnibalValter.todoSimple.security.JWTAuthenticationFilter;
+import com.AnibalValter.todoSimple.security.JWTAuthorizationFilter;
 import com.AnibalValter.todoSimple.security.JWTUtil;
 
 @Configuration
@@ -53,9 +55,9 @@ public class SecurityConfig {
         http.cors().and().csrf().disable();
 
         AuthenticationManagerBuilder authenticationManagerBuilder = http
-        .getSharedObject(AuthenticationManagerBuilder.class);
+                .getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.userDetailsService(this.userDetailsService)
-        .passwordEncoder(bCryptPasswordEncoder());
+                .passwordEncoder(bCryptPasswordEncoder());
 
         this.authenticationManager = authenticationManagerBuilder.build();
 
@@ -63,7 +65,13 @@ public class SecurityConfig {
         http.authorizeRequests()
                 .antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
                 .antMatchers(PUBLIC_MATCHERS).permitAll()
-                .anyRequest().authenticated();
+                .anyRequest().authenticated().and()
+                .authenticationManager(authenticationManager);
+
+        http.addFilter(new JWTAuthenticationFilter(this.authenticationManager, this.jwtUtil));
+        http.addFilter(new JWTAuthorizationFilter(this.authenticationManager, this.jwtUtil,
+                                this.userDetailsService));
+
 
         // Configuração para uso de sessões sem estado (STATELESS)
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

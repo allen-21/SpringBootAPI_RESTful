@@ -12,13 +12,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.AnibalValter.todoSimple.models.Task;
+import com.AnibalValter.todoSimple.models.porjection.TaskProjection;
 import com.AnibalValter.todoSimple.services.TaskService;
 import com.AnibalValter.todoSimple.services.UserService;
 
 
 
 @RestController
-@RequestMapping("/tasks") 
+@RequestMapping("/task") 
 @Validated
 public class TaskController {
     
@@ -37,10 +38,10 @@ public class TaskController {
         return ResponseEntity.ok(obj);
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Task>> findAllByUserId(@PathVariable Long userId) {
-        this.userService.findById(userId);
-        List<Task> obj = this.taskService.findAllByUserId(userId);
+    @GetMapping("/user")
+    public ResponseEntity<List<TaskProjection>> findAllByUser() {
+       
+        List<TaskProjection> obj = this.taskService.findAllByUser();
         return ResponseEntity.ok().body(obj);
     }
 

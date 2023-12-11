@@ -1,32 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Todo Simple app</title>
-    <script src="script.js"></script>
-    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css" />
-    <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-</head>
-
-<body>
-   
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ToDo Simple App</title>
+    <script src="./scripts/script.js"></script>
+    <link
+      href="/node_modules/bootstrap/dist/css/bootstrap-grid.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
     <div class="d-flex justify-content-center">
-        <div class="spinner-border" role="status" id="loading">
-            
-        </div>
-
+      <div class="spinner-border" role="status" id="loading"></div>
     </div>
-    <p class="h1 text-center">Tarefa de um usuario</p>
-   
-    <table class="table table-hover">
-        <tbody id="tasks">
-           
-        </tbody>
+
+    <div class="d-flex">
+      <p class="h1 text-center flex-grow-1">Suas tarefas</p>
+      <button
+        type="button"
+        class="btn btn-outline-dark text-left"
+        onclick="localStorage.removeItem('Authorization'); window.location = '/view/login.html'"
+      >
+        SignOut
+      </button>
+    </div>
+
+    <table class="table table-hover table-striped">
+      <tbody id="tasks"></tbody>
     </table>
 
-
-</body>
-
+    <script
+      src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+    ></script>
+  </body>
 </html>

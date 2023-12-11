@@ -5,7 +5,6 @@ import java.util.Objects;
 
 import javax.crypto.SecretKey;
 
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -16,39 +15,45 @@ import io.jsonwebtoken.security.Keys;
 @Component
 public class JWTUtil {
 
-
     @Value("${jwt.secret}")
     private String secret;
 
     @Value("${jwt.expiration}")
     private Long expiration;
 
-    public String genereteToken(String username){
+    public String genereteToken(String username) {
         SecretKey key = getKeyBySecret();
         return Jwts.builder()
-        .setSubject(username)
-        .setExpiration(new Date(System.currentTimeMillis() + this.expiration))
-        .signWith(key)
-        .compact();
+                .setSubject(username)
+                .setExpiration(new Date(System.currentTimeMillis() + this.expiration))
+                .signWith(key)
+                .compact();
     }
 
-    private SecretKey getKeyBySecret(){
+    private SecretKey getKeyBySecret() {
 
         SecretKey key = Keys.hmacShaKeyFor(this.secret.getBytes());
         return key;
     }
 
-    public boolean isValidToken(String token){
+    public boolean isValidToken(String token) {
         Claims claims = getClaims(token);
 
-        if(Objects.nonNull(claims)){
+        if (Objects.nonNull(claims)) {
             String username = claims.getSubject();
             Date expirationDate = claims.getExpiration();
             Date now = new Date(System.currentTimeMillis());
-            if(Objects.nonNull(username ) && Objects.nonNull(expirationDate) && now.before(expirationDate))
-            return true;
+            if (Objects.nonNull(username) && Objects.nonNull(expirationDate) && now.before(expirationDate))
+                return true;
         }
         return false;
+    }
+
+    public String getUsername(String token) {
+        Claims claims = getClaims(token);
+        if (Objects.nonNull(claims))
+            return claims.getSubject();
+        return null;
     }
 
     private Claims getClaims(String token) {
